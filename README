@@ -1,5 +1,30 @@
+        =====================
+         msgFlow Readme
+        =====================
+
 This is under heavy development.
 
-More info when it's working at all.
+         Requirements
+        --------------
+ - Running PunBB installation http://punbb.informer.com/
+ - Subdirectory for msgFlow locks have to be writeable by php
 
-Just give me a day or two.
+         Usage
+        -------
+When installed all users will get their index page updated live and get notification with a beep sound and title change.
+
+         Upcoming changes
+        ------------------
+- Visible status with option to mute
+- Live update of viewforum page
+- Configuration of sound
+- Admin can choose sql polling time
+
+         How it works
+        -----------------
+The extensions works as follows:
+- User arrives to either index
+- With long pulls JS will check if any changes have been done, currently the long pulls will last  280 seconds.
+- Connection is done to extern.php where the first person that started to long pull locks a file and then pulls the database every second. When a new post been posted php will return the new post and unlock the file so all other clients can check the database. This way only one client is constantly pulling from the database every fifth second.
+
+
