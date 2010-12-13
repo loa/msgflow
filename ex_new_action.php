@@ -1,4 +1,5 @@
 <?php
+if(!defined("MSGFLOW")) exit;
 if ($action == 'msgflow') {
 	set_time_limit(300);
 	$view = isset($_GET['view']) ? $_GET['view'] : 'index';

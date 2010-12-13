@@ -4,17 +4,19 @@
 <extension engine="1.0">
 	<id>msgflow</id>
 	<title>msgFlow</title>
-	<version>0.1.1</version>
-	<description>Gives ajax updates on board and forum views.</description>
+	<version>0.0.1</version>
+	<description>Dynamically updates the PunBB board with JS.</description>
 	<author>Loa</author>
-	<minversion>1.3</minversion>
-	<maxtestedon>1.3.2</maxtestedon>
+	<minversion>1.3.4</minversion>
+	<maxtestedon>1.3.4</maxtestedon>
 
 	<hooks>
 		<hook id="hd_head"><![CDATA[
+		        define("MSGFLOW", 1);
 			require($ext_info['path'].'/hd_head.php');
 		]]></hook>
 		<hook id="ex_new_action"><![CDATA[
+		        define("MSGFLOW", 1);
 			require($ext_info['path'].'/ex_new_action.php');
 		]]></hook>
 	</hooks>

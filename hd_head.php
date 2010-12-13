@@ -1,4 +1,5 @@
 <?php
+if(!defined("MSGFLOW")) exit;
 /*
 	FORUM_PAGE == 'index'
 	FORUM_PAGE == 'viewforum'
