@@ -16,8 +16,8 @@
 		$forum_head['msgflow_timestamp'] = '<script type="text/javascript">'.
 			'var msgflow_timestamp = '.time().';'.
 			'var msgflow_document_title = "";'.
-        '</script>';
-		
+                        'var msgflow_extern = "'.$base_url.'/extern.php"'.
+                        '</script>';
 	}
 
 ?>

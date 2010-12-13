@@ -6,7 +6,7 @@ $(document).ready(function() {
 
 function msgflow_pull() {
 	// Get updates from server
-	$.getJSON('/extern.php?action=msgflow&from=' + msgflow_timestamp, msgflow_callback);
+	$.getJSON(msgflow_extern+'?action=msgflow&from=' + msgflow_timestamp, msgflow_callback);
 }
 
 function msgflow_callback(data) {
