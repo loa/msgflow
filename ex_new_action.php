@@ -11,7 +11,20 @@ if ($action == 'msgflow') {
 	if($view == 'index') {
                 $fp = fopen($ext_info['path'].'/locks/index_'.$from, "wb+");
                 
-                flock($fp, LOCK_EX);
+                if(!flock($fp, LOCK_EX)) {
+                    echo "[]";
+                    exit;
+                }
+
+                // remove all old lock files
+                foreach(glob($ext_info['path'].'/locks/index_*') as $old_lock) {
+                    $fp_old = fopen($old_lock, "wb+");
+                    if(flock($fp_old, LOCK_EX | LOCK_NB)) {
+                        unlink($old_lock);
+                        flock($fp_old, LOCK_UN);
+                    } 
+                    fclose($fp_old);
+                }
 
 		$query = array(
 			'SELECT'	=> 'f.id AS forum_id, f.num_topics, f.num_posts, f.last_post, f.last_post_id, f.last_poster',
