@@ -11,10 +11,7 @@ if ($action == 'msgflow') {
 	if($view == 'index') {
                 $fp = fopen($ext_info['path'].'/locks/index_'.$from, "wb+");
                 
-                if(!flock($fp, LOCK_EX)) {
-                    echo "[]";
-                    exit();
-                } 
+                flock($fp, LOCK_EX);
 
 		$query = array(
 			'SELECT'	=> 'f.id AS forum_id, f.num_topics, f.num_posts, f.last_post, f.last_post_id, f.last_poster',
