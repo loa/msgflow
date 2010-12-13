@@ -7,8 +7,15 @@ if ($action == 'msgflow') {
 	header('Cache-Control: no-cache, must-revalidate');
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 	header('Content-type: application/json; charset=utf-8');
-	
+        	
 	if($view == 'index') {
+                $fp = fopen($ext_info['path'].'/locks/index_'.$from, "wb+");
+                
+                if(!flock($fp, LOCK_EX)) {
+                    echo "[]";
+                    exit();
+                } 
+
 		$query = array(
 			'SELECT'	=> 'f.id AS forum_id, f.num_topics, f.num_posts, f.last_post, f.last_post_id, f.last_poster',
 			'FROM'		=> 'categories AS c',
@@ -28,19 +35,22 @@ if ($action == 'msgflow') {
 		
 		$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 
-		$response = array();
 		$start_time = time();
 		
 		while($forum_db->num_rows($result) < 1) {
 			sleep(1);
 			if((time() - $start_time) > 280) {
-				echo json_encode($response);
+				echo "[]";
 				exit;
 			}
 			
 			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
 		}
 
+                flock($fp, LOCK_UN);
+                fclose($fp);
+
+		$response = array();
 		while ($cur_row = $forum_db->fetch_assoc($result))
 		{
 			$cur_row['date'] = format_time($cur_row['last_post']);
@@ -49,7 +59,7 @@ if ($action == 'msgflow') {
 			$response[] = $cur_row;
 		}
 	
-		echo json_encode($response);
+                echo "[]";
 		
 	} elseif($view == 'forum') {
 		
