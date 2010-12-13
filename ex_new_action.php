@@ -56,7 +56,7 @@ if ($action == 'msgflow') {
 			$response[] = $cur_row;
 		}
 	
-                echo "[]";
+                echo json_encode($response);
 		
 	} elseif($view == 'forum') {
 		
