@@ -49,7 +49,7 @@ if ($action == 'msgflow') {
 		$start_time = time();
 		
 		while($forum_db->num_rows($result) < 1) {
-			sleep(1);
+			sleep(5);
 			if((time() - $start_time) > 280) {
 				echo "[]";
 				exit;
