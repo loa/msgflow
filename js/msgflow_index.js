@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	// Start long pulling info,
 	// setTimeout to get webkit browser to finish loading
-	setTimeout("msgflow_pull()", 1000);
+	setTimeout("msgflow_pull()", 2000);
 });
 
 function msgflow_pull() {
