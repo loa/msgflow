@@ -1,5 +1,3 @@
-var msgflow_console = false;
-
 $(document).ready(function() {
 	// Start long pulling info,
 	// setTimeout to get webkit browser to finish loading
@@ -13,9 +11,6 @@ function msgflow_pull() {
 
 function msgflow_callback(data) {
 	var last_timestamp = msgflow_timestamp;
-        if(msgflow_console) {
-            console.dir(data);
-        }
 
 	// For each forum
 	$(data.updates).each(function () {
@@ -82,5 +77,6 @@ function msgflow_callback(data) {
 		document.title = 'New posts! - ' + msgflow_document_title;
 	}
 	// Make new long pull
-	msgflow_pull();
+	if(data.status == "success")
+        	msgflow_pull();
 }

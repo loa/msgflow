@@ -1,6 +1,8 @@
 <?php
 if(!defined("MSGFLOW")) exit;
 if ($action == 'msgflow') {
+        ini_set('display_errors', '0');
+
 	set_time_limit(300);
 	$view = isset($_GET['view']) ? $_GET['view'] : 'index';
 	$from = isset($_GET['from']) ? (int)$_GET['from'] : time();
