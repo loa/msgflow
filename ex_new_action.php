@@ -16,9 +16,20 @@ if ($action == 'msgflow') {
                             '.lock';
 
                 $fp = fopen($cur_lock, "wb+");
-                
+                 
+                if(!$fp) {
+                    echo json_encode(array(
+                        "status"    => "error",
+                        "console"   => "msgflow couldn't open lock file"
+                    ));
+                    exit;
+                }
+    
                 if(!flock($fp, LOCK_EX)) {
-                    echo "[]";
+                    echo json_encode(array(
+                        "status"    => "error",
+                        "console"   => "msgflow couldn't lock the lock file"
+                    ));
                     exit;
                 }
 
@@ -57,8 +68,11 @@ if ($action == 'msgflow') {
 		while($forum_db->num_rows($result) < 1) {
 			sleep(5);
 			if((time() - $start_time) > 280) {
-				echo "[]";
-				exit;
+                            echo json_encode(array(
+                                "status"    => "success",
+                                "console"   => ""
+                            ));
+                            exit;
 			}
 			
 			$result = $forum_db->query_build($query) or error(__FILE__, __LINE__);
@@ -67,15 +81,16 @@ if ($action == 'msgflow') {
                 flock($fp, LOCK_UN);
                 fclose($fp);
 
-		$response = array();
+		$response = array('status' => 'success', 'console' => '');
+                $response['updates'] = array();
 		while ($cur_row = $forum_db->fetch_assoc($result))
 		{
 			$cur_row['date'] = format_time($cur_row['last_post']);
 			$cur_row['post_url'] = forum_link($forum_url['post'], $cur_row['last_post_id']);
 			$cur_row['forum_newpost_url'] = forum_link($forum_url['search_new_results'], $cur_row['forum_id']);
-			$response[] = $cur_row;
-		}
-	
+                        $response['updates'][] = $cur_row;
+		}	
+
                 echo json_encode($response);
 		
 	} elseif($view == 'forum') {

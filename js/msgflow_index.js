@@ -13,7 +13,7 @@ function msgflow_callback(data) {
 	var last_timestamp = msgflow_timestamp;
 	
 	// For each forum
-	$(data).each(function (index, value) {
+	$(data.updates).each(function (index, value) {
 		// Check if this post is new
 		if(this.last_post > msgflow_timestamp) {
 			// Increase the timestamp
