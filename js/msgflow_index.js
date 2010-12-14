@@ -1,3 +1,5 @@
+var msgflow_console = false;
+
 $(document).ready(function() {
 	// Start long pulling info,
 	// setTimeout to get webkit browser to finish loading
@@ -11,9 +13,12 @@ function msgflow_pull() {
 
 function msgflow_callback(data) {
 	var last_timestamp = msgflow_timestamp;
-	
+        if(msgflow_console) {
+            console.dir(data);
+        }
+
 	// For each forum
-	$(data.updates).each(function (index, value) {
+	$(data.updates).each(function () {
 		// Check if this post is new
 		if(this.last_post > msgflow_timestamp) {
 			// Increase the timestamp
