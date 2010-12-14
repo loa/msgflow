@@ -10,7 +10,12 @@ if ($action == 'msgflow') {
 	header('Content-type: application/json; charset=utf-8');
         	
 	if($view == 'index') {
-                $fp = fopen($ext_info['path'].'/locks/index_'.$from, "wb+");
+                $cur_lock = $ext_info['path'].'/'.
+                            'locks/'.
+                            'index_'.$forum_user['g_id'].'_'.$from.
+                            '.lock';
+
+                $fp = fopen($cur_lock, "wb+");
                 
                 if(!flock($fp, LOCK_EX)) {
                     echo "[]";
@@ -18,7 +23,8 @@ if ($action == 'msgflow') {
                 }
 
                 // remove all old lock files
-                foreach(glob($ext_info['path'].'/locks/index_*') as $old_lock) {
+                foreach(glob($ext_info['path'].'/locks/*.lock') as $old_lock) {
+                    if($old_lock == $cur_lock) continue;
                     $fp_old = fopen($old_lock, "wb+");
                     if(flock($fp_old, LOCK_EX | LOCK_NB)) {
                         unlink($old_lock);
