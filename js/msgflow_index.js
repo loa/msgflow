@@ -6,7 +6,7 @@ $(document).ready(function() {
 
 function msgflow_pull() {
 	// Get updates from server
-	$.getJSON(msgflow_extern+'?action=msgflow&from=' + msgflow_timestamp, msgflow_callback);
+	$.getJSON(msgflow_base_url+'/extern.php?action=msgflow&from=' + msgflow_timestamp, msgflow_callback);
 }
 
 function msgflow_callback(data) {
@@ -67,7 +67,7 @@ function msgflow_callback(data) {
 		msgflow_timestamp = last_timestamp;
 		
 		// Use jBeep plugin to make a notification beep
-		$().jBeep();
+		$().jBeep({"path": msgflow_base_url+"/extensions/msgflow/sound/beep_mult.ogg"});
 		
 		// Check if we saved the original document title
 		if(!msgflow_document_title)

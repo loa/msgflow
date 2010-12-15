@@ -2,7 +2,7 @@
 (function($) {
 	$.jBeep = {
 		defaults: {
-			path: "/extensions/msgflow/sound/beep_mult.ogg",
+			path: "beep_mult.ogg",
 			audioElement: false,
 			active: true
 		}

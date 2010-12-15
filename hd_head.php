@@ -29,7 +29,7 @@ if(!defined("MSGFLOW")) exit;
 		$forum_head['msgflow_timestamp'] = '<script type="text/javascript">'.
 			'var msgflow_timestamp = '.$msgflow_timestamp.';'.
 			'var msgflow_document_title = "";'.
-                        'var msgflow_extern = "'.$base_url.'/extern.php"'.
+                        'var msgflow_base_url = "'.$base_url.'"'.
                         '</script>';
 	}
 
