@@ -26,15 +26,24 @@ if(!defined("MSGFLOW")) exit;
             $msgflow_timestamp = '0';
         }
 
-            $forum_head['jquery'] = '<script type="text/javascript" src="'.$base_url.'/extensions/msgflow/js/jquery-1.4.2.min.js"></script>';
-            $forum_head['json2'] = '<script type="text/javascript" src="'.$base_url.'/extensions/msgflow/js/json2.js"></script>';
-            $forum_head['msgflow'] = '<script type="text/javascript" src="'.$base_url.'/extensions/msgflow/js/msgflow.js"></script>';
-            $forum_head['msgflow_timestamp'] = '<script type="text/javascript">'.
-                'var msgflow_timestamp = '.$msgflow_timestamp.';'.
-                'var msgflow_document_title = "";'.
-                'var msgflow_base_url = "'.$base_url.'";'.
-                'var msgflow_forum_page = "'.FORUM_PAGE.'";'.
-                '</script>';
+        $msgflow_jsdata = array(
+            "var msgflow_timestamp = $msgflow_timestamp;",
+            "var msgflow_document_title = \"\";",
+            "var msgflow_base_url = \"$base_url\";",
+            "var msgflow_forum_page = \"".FORUM_PAGE.'";',
+        );
+
+        if(FORUM_PAGE == 'viewforum') {
+            $msgflow_jsdata[] = "var msgflow_forum_id = $id;";
+            $msgflow_jsdata[] = "var msgflow_disp_topics = ".$forum_config['o_disp_topics_default'].";";
+        }
+        $forum_head['jquery'] = '<script type="text/javascript" src="'.$base_url.'/extensions/msgflow/js/jquery-1.4.2.min.js"></script>';
+        $forum_head['json2'] = '<script type="text/javascript" src="'.$base_url.'/extensions/msgflow/js/json2.js"></script>';
+        $forum_head['msgflow'] = '<script type="text/javascript" src="'.$base_url.'/extensions/msgflow/js/msgflow.js"></script>';
+        $forum_head['msgflow_jsdata'] = 
+            "<script type=\"text/javascript\">\n\t".
+            implode($msgflow_jsdata, "\n\t").
+            "\n</script>";
     }
 
 ?>

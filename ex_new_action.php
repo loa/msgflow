@@ -99,6 +99,7 @@ if ($action == 'msgflow') {
         $cur_row['date'] = format_time($cur_row['posted']);
         $cur_row['post_url'] = forum_link($forum_url['post'], $cur_row['post_id']);
         $cur_row['forum_newpost_url'] = forum_link($forum_url['search_new_results'], $cur_row['forum_id']);
+        $cur_row['topic_newpost_url'] = forum_link($forum_url['topic_new_posts'], $cur_row['topic_id']);
         $response['updates'][] = $cur_row;
     }	
     echo json_encode($response);
