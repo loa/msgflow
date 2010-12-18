@@ -180,11 +180,82 @@ function msgflow_viewforum(data) {
    
     // Topic is not visible, create new row
     else {
-        // Create full row....
+        // Generate a new row
+        var topic_row = $("<div/>")
+            .attr("id", "topic"+data.topic_id)
+            .addClass("main-item normal new")
+            .append(
+                $("<span/>")
+                    .addClass("icon normal new")
+                    .html("<!-- -->")
+            )
+            .append(
+                $("<div/>")
+                    .addClass("item-subject")
+                    .append(
+                        $("<h3/>")
+                            .addClass("hn")
+                            .append(
+                                $("<span/>").addClass("item-num")
+                            )
+                            .append(
+                                $("<a/>")
+                                    .attr("href", data.topic_url)
+                                    .text(data.subject)
+                            )
+                    )
+                    .append(
+                        $("<p/>").append(
+                            $("<span/>").addClass("item-starter").text("by ")
+                                .append(
+                                    $("<cite/>").text(data.creator)
+                                )
+                        )
+                        .append(
+                            $("<span/>").addClass("item-nav").text(" ( ").append(
+                                $("<em/>").addClass("item-newposts").append(
+                                    $("<a/>")
+                                        .attr("href", data.topic_newpost_url)
+                                        .text("New posts")
+                                )
+                            ).append(" )")
+                        )
+                    )
+            )
+            .append(
+                $("<ul/>")
+                    .addClass("item-info")
+                    .append(
+                        $("<li/>").addClass("info-replies").append(
+                            $("<strong/>").text(data.num_replies)
+                        )
+                        .append($("<span/>").addClass("label").text(" reply"))
+                    )
+                    .append(
+                        $("<li/>").addClass("info-views").append(
+                            $("<strong/>").text(data.num_views)
+                        )
+                        .append($("<span/>").addClass("label").text(" views"))
+                    )
+                    .append(
+                        $("<li/>").addClass("info-lastpost").append(
+                            $("<span/>").addClass("label").text("Last post ")
+                        )
+                        .append(
+                            $("<strong/>").append(
+                                $("<a/>").attr("href", data.post_url).text(data.date)
+                            )
+                        )
+                        .append(
+                            $("<cite/>").text("by ").append(data.poster)
+                        )
+                    )
+            );
 
         // Check if there are more than allowed topics on the page visible
-        if (true) {
+        if ($("div.main-item").length > msgflow_disp_topics) {
             // Remove the topic in the bottom of the page
+            $("div.main-item:last").remove();
         }
         
         // Get the topic beneath stickies as rel_row
@@ -212,17 +283,20 @@ function msgflow_viewforum(data) {
         $("div.main-item:first").addClass("main-first-item");
     }
 
-    // Remove classes even and odd from all div.main-item
-    $("div.main-item")
-        .removeClass("even")
-        .removeClass("odd");
+    // Itterate through all div.main-item
+    $("div.main-item").each(function (index) {
+        // Remove classes even and odd from all div.main-item
+        $(this)
+            .removeClass("even")
+            .removeClass("odd");
 
-    // Set classes even and odd to corrent div.main-item
-    // Jquery even is 0 indexed so its reverse for us
-    $("div.main-item")
-        .filter(":even")
-            .addClass("odd")
-        .end()
-        .filter(":odd")
-            .addClass("even");
+        // Set classes even and odd to corrent div.main-item
+        if(index%2 == 0)
+            $(this).addClass("odd");
+        else
+            $(this).addClass("even");
+
+        // Set span.item-num
+        $(this).find("span.item-num").text(index+1);
+    });
 }
