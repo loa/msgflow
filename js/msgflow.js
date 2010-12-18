@@ -190,20 +190,26 @@ function msgflow_viewforum(data) {
         // Get the topic beneath stickies as rel_row
         var rel_row = $("div.main-item").not(".sticky").filter(":first");
         
-        // Make sure there existed none stickies
-        if($(rel_row).length == 0) {
-            // Only stickies, take the last one
-            rel_row = $("div.main-item:last");
+        // Make sure we got a none sticky
+        if($(rel_row).length > 0) {
+            // Remove main-first-item class from rel_row
+            $(rel_row).removeClass("main-first-item");
+            
+            // Insert topic_row before rel_row
+            $(topic_row).insertBefore($(rel_row));
         }
-
-        // Remove main-first-item class from rel_row
-        // todo
         
-        // Insert topic_row before rel_row
-        // todo
+        // There exists only stickies
+        else {
+            // Take the last sticky
+            rel_row = $("div.main-item:last");
+
+            // Insert after the last sticky
+            $(topic_row).insertAfter($(rel_row));
+        }
         
         // Add class main-first-item to top_row
-        // todo
+        $("div.main-item:first").addClass("main-first-item");
     }
 
     // Remove classes even and odd from all div.main-item
