@@ -38,8 +38,9 @@ if(!defined("MSGFLOW")) exit;
             $msgflow_jsdata[] = "var msgflow_disp_topics = ".$forum_config['o_disp_topics_default'].";";
         }
         $forum_head['jquery'] = '<script type="text/javascript" src="'.$base_url.'/extensions/msgflow/js/jquery-1.4.2.min.js"></script>';
-        $forum_head['json2'] = '<script type="text/javascript" src="'.$base_url.'/extensions/msgflow/js/json2.js"></script>';
-        $forum_head['msgflow'] = '<script type="text/javascript" src="'.$base_url.'/extensions/msgflow/js/msgflow.js"></script>';
+        //$forum_head['json2'] = '<script type="text/javascript" src="'.$base_url.'/extensions/msgflow/js/json2.js"></script>';
+        //$forum_head['msgflow'] = '<script type="text/javascript" src="'.$base_url.'/extensions/msgflow/js/msgflow.js"></script>';
+        $forum_head['msgflow'] = '<script type="text/javascript" src="'.$base_url.'/extensions/msgflow/js/msgflow_min.js"></script>';
         $forum_head['msgflow_jsdata'] = 
             "<script type=\"text/javascript\">\n\t".
             implode($msgflow_jsdata, "\n\t").
