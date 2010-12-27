@@ -5,7 +5,6 @@ $(document).ready(function() {
 });
 
 function msgflow_pull() {
-    // Get updates for index page
     $.getJSON(msgflow_base_url+'/extern.php?action=msgflow&from=' + msgflow_timestamp, msgflow_callback);
 }
 
@@ -27,21 +26,26 @@ function msgflow_callback(data) {
     // For each update
     $(data.updates).each(function () {
         // Check if this post is new
-        if(this.posted > msgflow_timestamp) {
+        if (this.posted > msgflow_timestamp) {
             // Increase the timestamp
             last_timestamp = this.posted;
 
             // Update index
-            if(msgflow_forum_page == 'index') {
+            if (msgflow_forum_page == 'index') {
                 msgflow_index(this);
             }
 
             // Update viewforum
-            else if(msgflow_forum_page == 'viewforum') {
-                if(msgflow_forum_id == this.forum_id)
+            else if (msgflow_forum_page == 'viewforum') {
+                if (msgflow_forum_id == this.forum_id)
                     msgflow_viewforum(this);
             }
- 
+
+            // Update active topics / searchtopics:show_recent
+            else if (msgflow_forum_page == 'searchtopics'
+                    && msgflow_forum_action == 'show_recent') {
+                msgflow_showrecent(this);
+            } 
         }
     });
     
@@ -300,3 +304,159 @@ function msgflow_viewforum(data) {
         $(this).find("span.item-num").text(index+1);
     });
 }
+
+function msgflow_showrecent(data) {
+    // Check if topic already is visible
+    if ($("#topic"+data.topic_id).length > 0) {
+        // Get the forum_row for faster dom lookups
+        var topic_row = $("#topic" + data.topic_id);
+       
+        // Make the icon change to new posts
+        $(topic_row)
+            .addClass("new")
+            .children("span.icon")
+            .addClass("new");
+
+        // Update num_replies
+        $(topic_row).find("li.info-replies > strong")
+            .text(data.num_replies);
+
+        // Update lastpost date and url
+        $(topic_row).find("li.info-lastpost > strong")
+            .html('<a href="' + data.post_url + '">' + data.date + '</a>');
+    
+        // Update last poster name
+        $(topic_row).find("li.info-lastpost > cite")
+            .text('by ' + data.poster);
+
+        // Add "( New posts )" link on the side of the topic creators name
+        if ($(topic_row).children("div.item-subject").find("span.item-nav").length == 0) {
+            var newpost = $("<span/>");
+            $(newpost)
+                .addClass("item-nav")
+                .html(
+                    ' ( <em class="item-newposts">' +
+                    ' <a href="' + data.topic_newpost_url + '">New posts</a>' +
+                    '</em> )'
+                )
+                .insertAfter($(topic_row).find("span.item-starter"));
+        } 
+
+        // Remove class main-first-item from top_row
+        $("div.main-item:first").removeClass("main-first-item");
+        
+        // Add main-first-item and add move to top
+        $(topic_row)
+            .addClass("main-first-item")
+            .prependTo($("div.main-content"));
+    }
+   
+    // Topic is not visible, create new row
+    else {
+        // Generate a new row
+        var topic_row = $("<div/>")
+            .attr("id", "topic"+data.topic_id)
+            .addClass("main-item normal new")
+            .append(
+                $("<span/>")
+                    .addClass("icon normal new")
+                    .html("<!-- -->")
+            )
+            .append(
+                $("<div/>")
+                    .addClass("item-subject")
+                    .append(
+                        $("<h3/>")
+                            .addClass("hn")
+                            .append(
+                                $("<span/>").addClass("item-num")
+                            )
+                            .append(
+                                $("<a/>")
+                                    .attr("href", data.topic_url)
+                                    .text(data.subject)
+                            )
+                    )
+                    .append(
+                        $("<p/>").append(
+                            $("<span/>").addClass("item-starter").text("by ")
+                                .append(
+                                    $("<cite/>").text(data.creator)
+                                )
+                        )
+                        .append(
+                            $("<span/>").addClass("item-nav").text(" ( ").append(
+                                $("<em/>").addClass("item-newposts").append(
+                                    $("<a/>")
+                                        .attr("href", data.topic_newpost_url)
+                                        .text("New posts")
+                                )
+                            ).append(" )")
+                        )
+                    )
+            )
+            .append(
+                $("<ul/>")
+                    .addClass("item-info")
+                    .append(
+                        $("<li/>").addClass("info-forum").append(
+                            $("<span/>").addClass("label").text("Posted in")
+                        )
+                        .append(
+                            $("<a/>").attr("href", data.forum_url).text(data.forum_name)
+                        )
+                    )
+                    .append(
+                        $("<li/>").addClass("info-replies").append(
+                            $("<strong/>").text(data.num_replies)
+                        )
+                        .append($("<span/>").addClass("label").text(" reply"))
+                    )
+                    .append(
+                        $("<li/>").addClass("info-lastpost").append(
+                            $("<span/>").addClass("label").text("Last post ")
+                        )
+                        .append(
+                            $("<strong/>").append(
+                                $("<a/>").attr("href", data.post_url).text(data.date)
+                            )
+                        )
+                        .append(
+                            $("<cite/>").text("by ").append(data.poster)
+                        )
+                    )
+            );
+
+        // Check if there are more than allowed topics on the page visible
+        if ($("div.main-item").length > msgflow_disp_topics) {
+            // Remove the topic in the bottom of the page
+            $("div.main-item:last").remove();
+        }
+        
+        // Remove class main-first-item from top_row
+        $("div.main-item:first").removeClass("main-first-item");
+        
+        // Add main-first-item and add move to top
+        $(topic_row)
+            .addClass("main-first-item")
+            .prependTo($("div.main-content"));
+    }
+
+    // Itterate through all div.main-item
+    $("div.main-item").each(function (index) {
+        // Remove classes even and odd from all div.main-item
+        $(this)
+            .removeClass("even")
+            .removeClass("odd");
+
+        // Set classes even and odd to corrent div.main-item
+        if(index%2 == 0)
+            $(this).addClass("odd");
+        else
+            $(this).addClass("even");
+
+        // Set span.item-num
+        $(this).find("span.item-num").text(index+1);
+    });
+}
+

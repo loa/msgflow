@@ -4,7 +4,7 @@
 <extension engine="1.0">
 	<id>msgflow</id>
 	<title>msgFlow</title>
-	<version>0.0.1</version>
+	<version>0.0.3</version>
 	<description>Dynamically updates the PunBB board with JS.</description>
 	<author>Loa</author>
 	<minversion>1.3.4</minversion>
@@ -18,6 +18,10 @@
 		<hook id="ex_new_action"><![CDATA[
 		        define("MSGFLOW", 1);
 			require($ext_info['path'].'/ex_new_action.php');
+		]]></hook>
+		<hook id="se_results_topics_row_pre_display"><![CDATA[
+		        if(!defined("MSGFLOW")) define("MSGFLOW", 1);
+			require($ext_info['path'].'/se_results_topics_row_pre_display.php');
 		]]></hook>
 	</hooks>
 
