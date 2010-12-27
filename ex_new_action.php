@@ -103,6 +103,7 @@ if ($action == 'msgflow') {
         $cur_row['forum_url'] = forum_link($forum_url['forum'], $cur_row['forum_id']);
         $cur_row['forum_newpost_url'] = forum_link($forum_url['search_new_results'], $cur_row['forum_id']);
         $cur_row['topic_newpost_url'] = forum_link($forum_url['topic_new_posts'], $cur_row['topic_id']);
+        $cur_row['topic_pages'] = ceil(($cur_row['num_replies'] + 1) / $forum_config['o_disp_posts_default']);
         $response['updates'][] = $cur_row;
     }	
     echo json_encode($response, JSON_HEX_AMP);

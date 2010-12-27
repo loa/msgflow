@@ -111,6 +111,39 @@ function msgflow_index(data) {
     }			
 }
 
+function msgflow_item_nav(navspan, topic_url, topic_pages, topic_newpost_url) {
+    // Create temporary container
+    var tmpcon = $("<div/>").html("( ");
+    
+    // Check if we need pages links
+    if(topic_pages > 1) {
+        $(tmpcon).append("<span>Pages&#160;</span>");
+
+        for(var i = 1; i < (topic_pages+1); i++) {
+            if(i == 1) {
+                // First item
+                $(tmpcon).append(
+                    $("<a/>").attr("href", topic_url).text(i).addClass("first-item")
+                ).append("&#160;");
+            } else {
+                $(tmpcon).append(
+                    $("<a/>").attr("href", topic_url + "&p=" + i).text(i)
+                ).append("&#160;");
+            }
+        }
+    }
+
+    // Add newposts
+    $(tmpcon).append(
+        '<em class="item-newposts">' +
+        ' <a href="' + topic_newpost_url + '">New posts</a>' +
+        '</em> )'
+    );
+
+    // Apply new content
+    $(navspan).html($(tmpcon).html());
+}
+ 
 function msgflow_viewforum(data) {
     // Check if topic already is visible
     if ($("#topic"+data.topic_id).length > 0) {
@@ -141,17 +174,18 @@ function msgflow_viewforum(data) {
 
         // Add "( New posts )" link on the side of the topic creators name
         if ($(topic_row).children("div.item-subject").find("span.item-nav").length == 0) {
-            var newpost = $("<span/>");
-            $(newpost)
+            $("<span/>")
                 .addClass("item-nav")
-                .html(
-                    ' ( <em class="item-newposts">' +
-                    ' <a href="' + data.topic_newpost_url + '">New posts</a>' +
-                    '</em> )'
-                )
                 .insertAfter($(topic_row).find("span.item-starter"));
-        } 
+        }
 
+        msgflow_item_nav(
+            $(topic_row).children("div.item-subject").find("span.item-nav"),
+            data.topic_url,
+            data.topic_pages,
+            data.topic_newpost_url
+        );
+            
         // Check if topic is sticky
         if ($(topic_row).hasClass("sticky")) {
             // Remove class main-first-item from top_row
@@ -215,14 +249,9 @@ function msgflow_viewforum(data) {
                                     $("<cite/>").text(data.creator)
                                 )
                         )
+                        .append(" ")
                         .append(
-                            $("<span/>").addClass("item-nav").text(" ( ").append(
-                                $("<em/>").addClass("item-newposts").append(
-                                    $("<a/>")
-                                        .attr("href", data.topic_newpost_url)
-                                        .text("New posts")
-                                )
-                            ).append(" )")
+                            $("<span/>").addClass("item-nav")
                         )
                     )
             )
@@ -256,6 +285,15 @@ function msgflow_viewforum(data) {
                     )
             );
 
+        // Populate topic item-nav
+        msgflow_item_nav(
+            $(topic_row).children("div.item-subject").find("span.item-nav"),
+            data.topic_url,
+            data.topic_pages,
+            data.topic_newpost_url
+        );
+        
+        // Add class main-first-item to top_row
         // Check if there are more than allowed topics on the page visible
         if ($("div.main-item").length > msgflow_disp_topics) {
             // Remove the topic in the bottom of the page
@@ -282,8 +320,7 @@ function msgflow_viewforum(data) {
             // Insert after the last sticky
             $(topic_row).insertAfter($(rel_row));
         }
-        
-        // Add class main-first-item to top_row
+ 
         $("div.main-item:first").addClass("main-first-item");
     }
 
@@ -331,16 +368,18 @@ function msgflow_showrecent(data) {
 
         // Add "( New posts )" link on the side of the topic creators name
         if ($(topic_row).children("div.item-subject").find("span.item-nav").length == 0) {
-            var newpost = $("<span/>");
-            $(newpost)
+            $("<span/>")
                 .addClass("item-nav")
-                .html(
-                    ' ( <em class="item-newposts">' +
-                    ' <a href="' + data.topic_newpost_url + '">New posts</a>' +
-                    '</em> )'
-                )
                 .insertAfter($(topic_row).find("span.item-starter"));
         } 
+
+        // Populate topic item-nav
+        msgflow_item_nav(
+            $(topic_row).children("div.item-subject").find("span.item-nav"),
+            data.topic_url,
+            data.topic_pages,
+            data.topic_newpost_url
+        );
 
         // Remove class main-first-item from top_row
         $("div.main-item:first").removeClass("main-first-item");
@@ -384,14 +423,9 @@ function msgflow_showrecent(data) {
                                     $("<cite/>").text(data.creator)
                                 )
                         )
+                        .append(" ")
                         .append(
-                            $("<span/>").addClass("item-nav").text(" ( ").append(
-                                $("<em/>").addClass("item-newposts").append(
-                                    $("<a/>")
-                                        .attr("href", data.topic_newpost_url)
-                                        .text("New posts")
-                                )
-                            ).append(" )")
+                            $("<span/>").addClass("item-nav")
                         )
                     )
             )
@@ -436,6 +470,14 @@ function msgflow_showrecent(data) {
         // Remove class main-first-item from top_row
         $("div.main-item:first").removeClass("main-first-item");
         
+        // Populate topic item-nav
+        msgflow_item_nav(
+            $(topic_row).children("div.item-subject").find("span.item-nav"),
+            data.topic_url,
+            data.topic_pages,
+            data.topic_newpost_url
+        );
+
         // Add main-first-item and add move to top
         $(topic_row)
             .addClass("main-first-item")
