@@ -249,7 +249,7 @@ function msgflow_viewforum(data) {
                                     $("<cite/>").text(data.creator)
                                 )
                         )
-                        .append(" ")
+                        .append("&#160;")
                         .append(
                             $("<span/>").addClass("item-nav")
                         )
@@ -423,7 +423,7 @@ function msgflow_showrecent(data) {
                                     $("<cite/>").text(data.creator)
                                 )
                         )
-                        .append(" ")
+                        .append("&#160;")
                         .append(
                             $("<span/>").addClass("item-nav")
                         )
