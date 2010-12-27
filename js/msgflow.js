@@ -176,7 +176,7 @@ function msgflow_viewforum(data) {
         if ($(topic_row).children("div.item-subject").find("span.item-nav").length == 0) {
             $("<span/>")
                 .addClass("item-nav")
-                .insertAfter($(topic_row).find("span.item-starter"));
+                .insertAfter($(topic_row).find("span.item-starter").append(" "));
         }
 
         msgflow_item_nav(
@@ -370,7 +370,7 @@ function msgflow_showrecent(data) {
         if ($(topic_row).children("div.item-subject").find("span.item-nav").length == 0) {
             $("<span/>")
                 .addClass("item-nav")
-                .insertAfter($(topic_row).find("span.item-starter"));
+                .insertAfter($(topic_row).find("span.item-starter").append(" "));
         } 
 
         // Populate topic item-nav
